@@ -108,7 +108,7 @@ def remove_semicolon(bundle):
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
-                line.replace(';', '')
+                line = line.replace(';', '')
             f.write(line)
 
 
@@ -124,15 +124,20 @@ def delete_space(bundle):
 
 
 func_fix = {
-    'W391': delete_line,
+    'E203': delete_space,
     'E302': insert_line,
+    # 'E303': delete_line,
     'E305': insert_line,
-    'W292': newline_EOF,
+    'E231': insert_space_after,
+    'E252': insert_space_before,
     'E261': insert_space_before,
     'E262': insert_space_after,
+    'E265': insert_space_after,
     'E703': remove_semicolon,
-    'E252': insert_space_before,
-    'E203': delete_space
+    'F401': delete_line,
+    'W292': newline_EOF,
+    'W293': delete_line,
+    'W391': delete_line,
 }
 
 
@@ -150,6 +155,7 @@ def solution_selector(full_details):
             print("Manually fix", entry)
             omitlist.append(entry)
         else:
+            print(key, entry)
             bundle = (lines, details)
             func_fix[key](bundle)
 
