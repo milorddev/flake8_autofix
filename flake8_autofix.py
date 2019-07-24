@@ -1,6 +1,8 @@
 import os
 import subprocess as sp
 
+omitlist = []
+
 
 def flake8_file(fpath):
     '''
@@ -9,15 +11,17 @@ def flake8_file(fpath):
     file = sp.getoutput('flake8 ' + fpath)
     filelist = file.strip().split('\n')
     filelist = list(filter(None, filelist))
+    filelist = [x for x in filelist if x not in omitlist]
     return filelist
 
 
 def extract_details(entry):
-    print('entry', entry)
-    path, row, col, message = entry.split(':')
-    row = int(row)-1
-    col = int(col)-1
-    return (path, row, col, message)
+    entrysplit = entry.split(':')
+    path = entrysplit[0]
+    row = int(entrysplit[1])-1
+    col = int(entrysplit[2])-1
+    message = ''.join(entrysplit[3])
+    return (path, row, col, message, entry)
 
 
 def get_all_files():
@@ -37,6 +41,7 @@ def find_fix(message):
     for key in keys:
         if key in message:
             return key
+    return None
 
 
 def delete_line(bundle):
@@ -60,8 +65,18 @@ def insert_line(bundle):
             f.write(line)
 
 
+def newline_EOF(bundle):
+    print('inserting line at end')
+    lines, details = bundle
+    path, row, col, message = details
+    with open(path, 'w') as f:
+        for index, line in enumerate(lines):
+            f.write(line)
+        f.write('\n')
+
+
 def insert_space_before(bundle):
-    print('deleting line')
+    print('inserting space')
     lines, details = bundle
     path, row, col, message = details
     with open(path, 'w') as f:
@@ -74,7 +89,7 @@ def insert_space_before(bundle):
 
 
 def insert_space_after(bundle):
-    print('deleting line')
+    print('inserting space')
     lines, details = bundle
     path, row, col, message = details
     with open(path, 'w') as f:
@@ -87,7 +102,7 @@ def insert_space_after(bundle):
 
 
 def remove_semicolon(bundle):
-    print('deleting line')
+    print('deleting semicolon')
     lines, details = bundle
     path, row, col, message = details
     with open(path, 'w') as f:
@@ -97,26 +112,46 @@ def remove_semicolon(bundle):
             f.write(line)
 
 
+def delete_space(bundle):
+    print('deleting space')
+    lines, details = bundle
+    path, row, col, message = details
+    with open(path, 'w') as f:
+        for index, line in enumerate(lines):
+            if index == row:
+                line = line[:col] + line[col+1:]
+            f.write(line)
+
+
 func_fix = {
     'W391': delete_line,
     'E302': insert_line,
     'E305': insert_line,
+    'W292': newline_EOF,
     'E261': insert_space_before,
     'E262': insert_space_after,
-    'E703': remove_semicolon
+    'E703': remove_semicolon,
+    'E252': insert_space_before,
+    'E203': delete_space
 }
 
 
-def solution_selector(details):
+def solution_selector(full_details):
     '''
     selects the solution to deal out
     '''
-    path, row, col, message = details
+    global omitlist
+    path, row, col, message, entry = full_details
+    details = (path, row, col, message)
     with open(path, 'r') as f:
         lines = f.readlines()
         key = find_fix(message)
-        bundle = (lines, details)
-        func_fix[key](bundle)
+        if key is None:
+            print("Manually fix", entry)
+            omitlist.append(entry)
+        else:
+            bundle = (lines, details)
+            func_fix[key](bundle)
 
 
 files = get_all_files()
