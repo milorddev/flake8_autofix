@@ -70,9 +70,9 @@ If you would like to help make this list more complete, create a pull request! Y
 | E261 | at least two spaces before inline comment                            |      X      |
 | E262 | inline comment should start with ‘# ‘                                |      X      |
 | E265 | block comment should start with ‘# ‘                                 |      X      |
-| E266 | too many leading ‘#’ for block comment                               |             |
+| E266 | too many leading ‘#’ for block comment                               |      X      |
 | E271 | multiple spaces after keyword                                        |             |
-| E272 | multiple spaces before keyword                                       |             |
+| E272 | multiple spaces before keyword                                       |      X      |
 | E273 | tab after keyword                                                    |             |
 | E274 | tab before keyword                                                   |             |
 | E275 | missing whitespace after keyword                                     |             |

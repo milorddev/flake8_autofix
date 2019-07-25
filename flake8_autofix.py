@@ -174,6 +174,28 @@ def delete_character(bundle):
             f.write(line)
 
 
+def delete_unused_import(bundle):
+    '''
+    delete a character at row, col
+    '''
+    print('deleting character')
+    lines, details = bundle
+    path, row, col, message = details
+    string_to_remove = message.split("'")[1].split('.')[-1]
+    with open(path, 'w') as f:
+        for index, line in enumerate(lines):
+            if index == row:
+                spl = line.split('import')
+                imports = spl[-1].split(',')
+                imports = [x.strip() for x in imports]
+                imports.remove(string_to_remove)
+                if len(imports):
+                    new_line = spl[0] + ' import ' + ' ,'.join(imports) + '\n'
+                    f.write(new_line)
+            else:
+                f.write(line)
+
+
 func_fix = {
     'E201': delete_character,
     'E202': delete_character,
@@ -189,11 +211,12 @@ func_fix = {
     'E262': insert_space_after,
     'E265': insert_space_after,
     'E266': delete_character,
+    'E272': delete_character,
     'E302': insert_line,
     'E303': delete_blank_line,
     'E305': insert_line,
     'E703': remove_semicolon,
-    'F401': delete_line,
+    'F401': delete_unused_import,
     'W191': convert_tabs_to_spaces,
     'W291': delete_character,
     'W292': newline_EOF,
