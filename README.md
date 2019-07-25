@@ -66,6 +66,7 @@ If you would like to help make this list more complete, create a pull request! Y
 | E241 | multiple spaces after ‘,’                                            |             |
 | E242 | tab after ‘,’                                                        |             |
 | E251 | unexpected spaces around keyword / parameter equals                  |             |
+| E252 | missing whitespace around parameter equals                           |      X      |
 | E261 | at least two spaces before inline comment                            |      X      |
 | E262 | inline comment should start with ‘# ‘                                |      X      |
 | E265 | block comment should start with ‘# ‘                                 |      X      |
