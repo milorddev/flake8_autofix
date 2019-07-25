@@ -54,18 +54,18 @@ If you would like to help make this list more complete, create a pull request! Y
 | E202 | whitespace before ‘)’                                                |      X      |
 | E203 | whitespace before ‘:’                                                |      X      |
 | E211 | whitespace before ‘(‘                                                |      X      |
-| E221 | multiple spaces before operator                                      |             |
-| E222 | multiple spaces after operator                                       |             |
+| E221 | multiple spaces before operator                                      |      X      |
+| E222 | multiple spaces after operator                                       |      X      |
 | E223 | tab before operator                                                  |             |
 | E224 | tab after operator                                                   |             |
-| E225 | missing whitespace around operator                                   |             |
+| E225 | missing whitespace around operator                                   |      X      |
 | E226 | missing whitespace around arithmetic operator                        |             |
 | E227 | missing whitespace around bitwise or shift operator                  |             |
 | E228 | missing whitespace around modulo operator                            |             |
 | E231 | missing whitespace after ‘,’, ‘;’, or ‘:’                            |      X      |
 | E241 | multiple spaces after ‘,’                                            |             |
 | E242 | tab after ‘,’                                                        |             |
-| E251 | unexpected spaces around keyword / parameter equals                  |             |
+| E251 | unexpected spaces around keyword / parameter equals                  |      X      |
 | E252 | missing whitespace around parameter equals                           |      X      |
 | E261 | at least two spaces before inline comment                            |      X      |
 | E262 | inline comment should start with ‘# ‘                                |      X      |
@@ -78,7 +78,7 @@ If you would like to help make this list more complete, create a pull request! Y
 | E275 | missing whitespace after keyword                                     |             |
 | E301 | expected 1 blank line, found 0                                       |             |
 | E302 | expected 2 blank lines, found 0                                      |      X      |
-| E303 | too many blank lines (3)                                             |             |
+| E303 | too many blank lines (3)                                             |      X      |
 | E304 | blank lines found after function decorator                           |             |
 | E305 | expected 2 blank lines after end of function or class                |      X      |
 | E306 | expected 1 blank line before a nested definition                     |             |
@@ -102,7 +102,7 @@ If you would like to help make this list more complete, create a pull request! Y
 | E743 | do not define functions named ‘l’, ‘O’, or ‘I’                       |             |
 | E901 | SyntaxError or IndentationError                                      |             |
 | E902 | IOError                                                              |             |
-| W191 | indentation contains tabs                                            |             |
+| W191 | indentation contains tabs                                            |      X      |
 | W291 | trailing whitespace                                                  |      X      |
 | W292 | no newline at end of file                                            |      X      |
 | W293 | blank line contains whitespace                                       |      X      |

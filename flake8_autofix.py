@@ -1,5 +1,6 @@
 import os
 import subprocess as sp
+import re
 
 omitlist = []
 
@@ -16,6 +17,9 @@ def flake8_file(fpath):
 
 
 def extract_details(entry):
+    '''
+    fetch information from flake8 message string
+    '''
     entrysplit = entry.split(':')
     path = entrysplit[0]
     row = int(entrysplit[1])-1
@@ -45,6 +49,9 @@ def find_fix(message):
 
 
 def delete_line(bundle):
+    '''
+    delete line of mentioned row
+    '''
     print('deleting line')
     lines, details = bundle
     path, row, col, message = details
@@ -54,7 +61,23 @@ def delete_line(bundle):
                 f.write(line)
 
 
+def delete_blank_line(bundle):
+    '''
+    delete previous line of mentioned row
+    '''
+    print('deleting blank line')
+    lines, details = bundle
+    path, row, col, message = details
+    with open(path, 'w') as f:
+        for index, line in enumerate(lines):
+            if index != row-1:
+                f.write(line)
+
+
 def insert_line(bundle):
+    '''
+    insert an new line at row
+    '''
     print('inserting line')
     lines, details = bundle
     path, row, col, message = details
@@ -66,6 +89,9 @@ def insert_line(bundle):
 
 
 def newline_EOF(bundle):
+    '''
+    insert new line at EOF
+    '''
     print('inserting line at end')
     lines, details = bundle
     path, row, col, message = details
@@ -76,6 +102,9 @@ def newline_EOF(bundle):
 
 
 def insert_space_before(bundle):
+    '''
+    insert space at mentioned col
+    '''
     print('inserting space')
     lines, details = bundle
     path, row, col, message = details
@@ -89,6 +118,9 @@ def insert_space_before(bundle):
 
 
 def insert_space_after(bundle):
+    '''
+    insert space after mentioned col
+    '''
     print('inserting space')
     lines, details = bundle
     path, row, col, message = details
@@ -101,7 +133,23 @@ def insert_space_after(bundle):
                 f.write(line)
 
 
+def convert_tabs_to_spaces(bundle):
+    '''
+    convert all tabs to 4 spaces
+    '''
+    print('converting tabs to spaces')
+    lines, details = bundle
+    path, row, col, message = details
+    with open(path, 'w') as f:
+        for index, line in enumerate(lines):
+            line = re.sub('\t', '    ', line)
+            f.write(line)
+
+
 def remove_semicolon(bundle):
+    '''
+    remove semicolons
+    '''
     print('deleting semicolon')
     lines, details = bundle
     path, row, col, message = details
@@ -112,8 +160,11 @@ def remove_semicolon(bundle):
             f.write(line)
 
 
-def delete_space(bundle):
-    print('deleting space')
+def delete_character(bundle):
+    '''
+    delete a character at row, col
+    '''
+    print('deleting character')
     lines, details = bundle
     path, row, col, message = details
     with open(path, 'w') as f:
@@ -124,23 +175,29 @@ def delete_space(bundle):
 
 
 func_fix = {
-    'E201': delete_space,
-    'E202': delete_space,
-    'E203': delete_space,
-    'E302': insert_line,
-    # 'E303': delete_line,
-    'E305': insert_line,
-    'E211': delete_space,
+    'E201': delete_character,
+    'E202': delete_character,
+    'E203': delete_character,
+    'E211': delete_character,
+    'E221': delete_character,
+    'E222': delete_character,
+    'E225': insert_space_before,
     'E231': insert_space_after,
+    'E251': delete_character,
     'E252': insert_space_before,
     'E261': insert_space_before,
     'E262': insert_space_after,
     'E265': insert_space_after,
+    'E266': delete_character,
+    'E302': insert_line,
+    'E303': delete_blank_line,
+    'E305': insert_line,
     'E703': remove_semicolon,
     'F401': delete_line,
-    'W291': delete_space,
+    'W191': convert_tabs_to_spaces,
+    'W291': delete_character,
     'W292': newline_EOF,
-    'W293': delete_line,
+    'W293': delete_character,
     'W391': delete_line,
 }
 
