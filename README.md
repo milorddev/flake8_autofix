@@ -50,10 +50,10 @@ If you would like to help make this list more complete, create a pull request! Y
 | E129 | visually indented line with same indent as next logical line         |             |
 | E131 | continuation line unaligned for hanging indent                       |             |
 | E133 | closing bracket is missing indentation                               |             |
-| E201 | whitespace after ‘(‘                                                 |             |
-| E202 | whitespace before ‘)’                                                |             |
+| E201 | whitespace after ‘(‘                                                 |      X      |
+| E202 | whitespace before ‘)’                                                |      X      |
 | E203 | whitespace before ‘:’                                                |      X      |
-| E211 | whitespace before ‘(‘                                                |             |
+| E211 | whitespace before ‘(‘                                                |      X      |
 | E221 | multiple spaces before operator                                      |             |
 | E222 | multiple spaces after operator                                       |             |
 | E223 | tab before operator                                                  |             |
@@ -103,7 +103,7 @@ If you would like to help make this list more complete, create a pull request! Y
 | E901 | SyntaxError or IndentationError                                      |             |
 | E902 | IOError                                                              |             |
 | W191 | indentation contains tabs                                            |             |
-| W291 | trailing whitespace                                                  |             |
+| W291 | trailing whitespace                                                  |      X      |
 | W292 | no newline at end of file                                            |      X      |
 | W293 | blank line contains whitespace                                       |      X      |
 | W391 | blank line at end of file                                            |      X      |

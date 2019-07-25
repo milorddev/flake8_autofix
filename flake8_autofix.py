@@ -124,10 +124,13 @@ def delete_space(bundle):
 
 
 func_fix = {
+    'E201': delete_space,
+    'E202': delete_space,
     'E203': delete_space,
     'E302': insert_line,
     # 'E303': delete_line,
     'E305': insert_line,
+    'E211': delete_space,
     'E231': insert_space_after,
     'E252': insert_space_before,
     'E261': insert_space_before,
@@ -135,6 +138,7 @@ func_fix = {
     'E265': insert_space_after,
     'E703': remove_semicolon,
     'F401': delete_line,
+    'W291': delete_space,
     'W292': newline_EOF,
     'W293': delete_line,
     'W391': delete_line,
