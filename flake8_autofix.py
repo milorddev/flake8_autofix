@@ -1,5 +1,6 @@
 import os
 import subprocess as sp
+from multiprocessing import Pool
 import re
 
 omitlist = []
@@ -54,7 +55,7 @@ def delete_line(bundle):
     '''
     print('deleting line')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index != row:
@@ -67,7 +68,7 @@ def delete_blank_line(bundle):
     '''
     print('deleting blank line')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index != row-1:
@@ -80,7 +81,7 @@ def insert_line(bundle):
     '''
     print('inserting line')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
@@ -94,7 +95,7 @@ def newline_EOF(bundle):
     '''
     print('inserting line at end')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             f.write(line)
@@ -107,7 +108,7 @@ def insert_space_before(bundle):
     '''
     print('inserting space')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
@@ -123,7 +124,7 @@ def insert_space_after(bundle):
     '''
     print('inserting space')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
@@ -139,7 +140,7 @@ def convert_tabs_to_spaces(bundle):
     '''
     print('converting tabs to spaces')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             line = re.sub('\t', '    ', line)
@@ -152,7 +153,7 @@ def remove_semicolon(bundle):
     '''
     print('deleting semicolon')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
@@ -166,7 +167,7 @@ def delete_character(bundle):
     '''
     print('deleting character')
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     with open(path, 'w') as f:
         for index, line in enumerate(lines):
             if index == row:
@@ -178,22 +179,27 @@ def delete_unused_import(bundle):
     '''
     delete a character at row, col
     '''
-    print('deleting character')
+    print('deleting unused import')
+    global omitlist
     lines, details = bundle
-    path, row, col, message = details
+    path, row, col, message, entry = details
     string_to_remove = message.split("'")[1].split('.')[-1]
-    with open(path, 'w') as f:
-        for index, line in enumerate(lines):
-            if index == row:
-                spl = line.split('import')
-                imports = spl[-1].split(',')
-                imports = [x.strip() for x in imports]
-                imports.remove(string_to_remove)
-                if len(imports):
-                    new_line = spl[0] + ' import ' + ' ,'.join(imports) + '\n'
-                    f.write(new_line)
-            else:
-                f.write(line)
+    if string_to_remove in lines[row]:
+        with open(path, 'w') as f:
+            for index, line in enumerate(lines):
+                if index == row:
+                    spl = line.split('import')
+                    imports = spl[-1].split(',')
+                    imports = [x.strip() for x in imports]
+                    imports.remove(string_to_remove)
+                    if len(imports):
+                        new_line = spl[0] + ' import ' + ' ,'.join(imports) + '\n'
+                        f.write(new_line)
+                else:
+                    f.write(line)
+    else:
+        print("Manually fix", entry)
+        omitlist.append(entry)
 
 
 func_fix = {
@@ -231,7 +237,7 @@ def solution_selector(full_details):
     '''
     global omitlist
     path, row, col, message, entry = full_details
-    details = (path, row, col, message)
+    # details = (path, row, col, message)
     with open(path, 'r') as f:
         lines = f.readlines()
         key = find_fix(message)
@@ -240,12 +246,11 @@ def solution_selector(full_details):
             omitlist.append(entry)
         else:
             print(key, entry)
-            bundle = (lines, details)
+            bundle = (lines, full_details)
             func_fix[key](bundle)
 
 
-files = get_all_files()
-for file in files:
+def fix_a_file(file):
     resolved = False
     while not resolved:
         file_errors = flake8_file(file)
@@ -254,3 +259,8 @@ for file in files:
         else:
             details = extract_details(file_errors[0])
             solution_selector(details)
+
+
+files = get_all_files()
+p = Pool(4)
+p.map(fix_a_file, files)
