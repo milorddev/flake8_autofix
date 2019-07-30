@@ -4,7 +4,7 @@ This script automagically fixes simple flake8 linting errors and warnings
 
 The script in action:
 
-![flake8_autofix_in_action](https://media.discordapp.com/attachments/564872937455484928/605790338451243058/autolintfix.gif)
+![flake8_autofix_in_action](https://cdn.discordapp.com/attachments/564872937455484928/605790338451243058/autolintfix.gif)
 
 
 ### How to use the script
