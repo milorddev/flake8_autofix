@@ -2,6 +2,13 @@
 
 This script automagically fixes simple flake8 linting errors and warnings
 
+The script in action:
+
+![flake8_autofix_in_action](https://media.discordapp.net/attachments/564872937455484928/605790338451243058/autolintfix.gif)
+
+
+### How to use the script
+
 All you have to do is run this script in the directory you want to lint/fix
 
 If you drop the script in the same folder as your project
