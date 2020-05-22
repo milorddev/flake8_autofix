@@ -1,6 +1,6 @@
 import os
 import subprocess as sp
-from multiprocessing import Pool
+import multiprocessing
 import re
 
 omitlist = []
@@ -262,5 +262,5 @@ def fix_a_file(file):
 
 
 files = get_all_files()
-p = Pool(4)
+p = multiprocessing.Pool(multiprocessing.cpu_count())
 p.map(fix_a_file, files)
