@@ -193,7 +193,7 @@ def delete_unused_import(bundle):
                     imports = [x.strip() for x in imports]
                     imports.remove(string_to_remove)
                     if len(imports):
-                        new_line = spl[0] + ' import ' + ' ,'.join(imports) + '\n'
+                        new_line = f"{spl[0]} import {' ,'.join(imports)}\n"
                         f.write(new_line)
                 else:
                     f.write(line)
@@ -254,7 +254,7 @@ def fix_a_file(file):
     resolved = False
     while not resolved:
         file_errors = flake8_file(file)
-        if(len(file_errors) == 0):
+        if not file_errors:
             resolved = True
         else:
             details = extract_details(file_errors[0])
